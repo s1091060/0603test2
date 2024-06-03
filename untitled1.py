@@ -126,15 +126,37 @@ KBar_dic['amount']=np.array(KBar_amount_list)
 
 Date = start_date.strftime("%Y-%m-%d")
 
-st.title("選擇 K 棒的時間長度(日 週 年 )")
-options = ['日', '週', '年']
+st.title("選擇 K 棒的時間長度(日 週 月 )")
+options = ['日', '週', '月']
 selected_option = st.selectbox('請選擇一個選項:', options)
-cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)', value=1440, key="KBar_duration")
+# 根據選擇的選項自動設置 K 棒的時間長度
+if selected_option == '日':
+    default_duration = 1440  # 1 日 = 1440 分鐘
+elif selected_option == '週':
+    default_duration = 10080  # 1 週 = 7 * 1440 分鐘
+elif selected_option == '月':
+    default_duration = 43200  # 1 月 = 30 * 1440 分鐘
+cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)',  value=default_duration, key="KBar_duration")
 cycle_duration = int(cycle_duration)
 #cycle_duration = 1440   ## 可以改成你想要的 KBar 週期
 #KBar = indicator_f_Lo2.KBar(Date,'time',2)
 KBar = indicator_forKBar_short.KBar(Date,cycle_duration)    ## 設定cycle_duration可以改成你想要的 KBar 週期
 
+
+
+# 假設你有一個日期數據 DataFrame，這裡用一個範例 DataFrame
+# Date = pd.DataFrame({'time': pd.date_range(start='1/1/2023', periods=100, freq='H')})
+
+# 假設 KBar 是 indicator_forKBar_short 模塊中的一個函數
+# 這裡用一個範例函數表示
+# KBar = indicator_forKBar_short.KBar(Date, cycle_duration)
+
+# 在 Streamlit 應用中顯示選擇和輸入的結果
+st.write('你選擇的時間範圍是:', selected_option)
+st.write('K 棒的時間長度為:', cycle_duration, '分鐘')
+
+# 顯示KBar計算結果的範例（這部分根據你實際的KBar函數進行替換）
+# st.write('KBar 計算結果:', KBar)
 
 
 #KBar_dic['amount'].shape   ##(5585,)
