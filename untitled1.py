@@ -126,12 +126,16 @@ KBar_dic['amount']=np.array(KBar_amount_list)
 
 Date = start_date.strftime("%Y-%m-%d")
 
-st.subheader("設定一根 K 棒的時間長度(分鐘)")
+st.title("選擇 K 棒的時間長度(日 週 年 )")
+options = ['日', '週', '年']
+selected_option = st.selectbox('請選擇一個選項:', options)
 cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)', value=1440, key="KBar_duration")
 cycle_duration = int(cycle_duration)
 #cycle_duration = 1440   ## 可以改成你想要的 KBar 週期
 #KBar = indicator_f_Lo2.KBar(Date,'time',2)
 KBar = indicator_forKBar_short.KBar(Date,cycle_duration)    ## 設定cycle_duration可以改成你想要的 KBar 週期
+
+
 
 #KBar_dic['amount'].shape   ##(5585,)
 #KBar_dic['amount'].size    ##5585
@@ -320,21 +324,7 @@ KBar_df['STD'] = KBar_df['close'].rolling(window=BollingerPeriod).std()
 KBar_df['Upper'] = KBar_df['MA'] + (KBar_df['STD'] * BollingerStdDev)
 KBar_df['Lower'] = KBar_df['MA'] - (KBar_df['STD'] * BollingerStdDev)
 
-###唐奇安通道
-st.subheader("設定唐奇安通道的週期(單位:根K棒, 例如20)")
-DonchianPeriod = st.slider('選擇一個整數', 1, 100, 20)
 
-# 計算唐奇安通道
-def calculate_donchian(df, period):
-    df['Donchian_High'] = df['High'].rolling(window=period).max()
-    df['Donchian_Low'] = df['Low'].rolling(window=period).min()
-    df['Donchian_Middle'] = (df['Donchian_High'] + df['Donchian_Low']) / 2
-    return df
-
-KBar_df = calculate_donchian(KBar_df, DonchianPeriod)
-
-# 去除唐奇安通道的 NaN 值
-last_nan_index_donchian = KBar_df['Donchian_High'][::-1].index[KBar_df['Donchian_High'][::-1].apply(pd.isna)][0]
 
 ###### (5) 將 Dataframe 欄位名稱轉換  ###### 
 KBar_df.columns = [ i[0].upper()+i[1:] for i in KBar_df.columns ]
@@ -412,25 +402,4 @@ with st.expander("K線圖, 布林通道"):
     fig4.add_trace(go.Scatter(x=KBar_df['Time'], y=KBar_df['Upper'], mode='lines', line=dict(color='green', width=2), name='上軌'), secondary_y=True)
     fig4.add_trace(go.Scatter(x=KBar_df['Time'], y=KBar_df['Lower'], mode='lines', line=dict(color='red', width=2), name='下軌'), secondary_y=True)
     fig4.layout.yaxis2.showgrid = True
-    st.plotly_chart(fig4, use_container_width=True) 
-    
-    with st.expander("K線圖, 唐奇安通道"):
-        fig4 = make_subplots(specs=[[{"secondary_y": True}]])
-        
-        #### include candlestick with rangeselector
-        fig4.add_trace(go.Candlestick(x=KBar_df['Time'],
-                        open=KBar_df['Open'], high=KBar_df['High'],
-                        low=KBar_df['Low'], close=KBar_df['Close'], name='K線'),
-                       secondary_y=True)
-        
-        fig4.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_donchian+1:], y=KBar_df['Donchian_High'][last_nan_index_donchian+1:], mode='lines',line=dict(color='blue', width=1), name=f'{DonchianPeriod}-根 K棒 唐奇安上軌'), 
-                      secondary_y=True)
-        
-        fig4.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_donchian+1:], y=KBar_df['Donchian_Low'][last_nan_index_donchian+1:], mode='lines',line=dict(color='red', width=1), name=f'{DonchianPeriod}-根 K棒 唐奇安下軌'), 
-                      secondary_y=True)
-        
-        fig4.add_trace(go.Scatter(x=KBar_df['Time'][last_nan_index_donchian+1:], y=KBar_df['Donchian_Middle'][last_nan_index_donchian+1:], mode='lines',line=dict(color='green', width=1), name=f'{DonchianPeriod}-根 K棒 唐奇安中軌'), 
-                      secondary_y=True)
-
-        fig4.layout.yaxis2.showgrid = True
-        st.plotly_chart(fig4, use_container_width=True)
+    st.plotly_chart(fig4, use_container_width=True)
