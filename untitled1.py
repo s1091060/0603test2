@@ -149,48 +149,6 @@ KBar = indicator_forKBar_short.KBar(Date,cycle_duration)    ## 設定cycle_durat
 
 
 
-
-# 顯示選擇的時間範圍和計算出的 K 棒時間長度
-#st.write('你選擇的時間範圍是:', selected_option)
-#st.write('K 棒的時間長度為:', cycle_duration, '分鐘')
-
-# 假設你有一個日期數據 DataFrame，這裡用一個範例 DataFrame
-# Date = pd.DataFrame({'time': pd.date_range(start='1/1/2023', periods=100, freq='H')})
-
-# 假設 KBar 是 indicator_forKBar_short 模塊中的一個函數
-# 這裡用一個範例函數表示
-# KBar = indicator_forKBar_short.KBar(Date, cycle_duration)
-
-# 在 Streamlit 應用中顯示選擇和輸入的結果
-# st.write('KBar 計算結果:', KBar)
-
-
-# 假設你有一個日期數據 DataFrame，這裡用一個範例 DataFrame
-# Date = pd.DataFrame({'time': pd.date_range(start='1/1/2023', periods=100, freq='H')})
-
-# 假設 KBar 是 indicator_forKBar_short 模塊中的一個函數
-# 這裡用一個範例函數表示
-# KBar = indicator_forKBar_short.KBar(Date, cycle_duration)
-
-# 在 Streamlit 應用中顯示選擇和輸入的結果
-# st.write('KBar 計算結果:', KBar)
-
-
-# 假設你有一個日期數據 DataFrame，這裡用一個範例 DataFrame
-# Date = pd.DataFrame({'time': pd.date_range(start='1/1/2023', periods=100, freq='H')})
-
-# 假設 KBar 是 indicator_forKBar_short 模塊中的一個函數
-# 這裡用一個範例函數表示
-# KBar = indicator_forKBar_short.KBar(Date, cycle_duration)
-
-# 在 Streamlit 應用中顯示選擇和輸入的結果
-st.write('你選擇的時間範圍是:', selected_option)
-st.write('K 棒的時間長度為:', cycle_duration, '分鐘')
-
-# 顯示KBar計算結果的範例（這部分根據你實際的KBar函數進行替換）
-# st.write('KBar 計算結果:', KBar)
-
-
 #KBar_dic['amount'].shape   ##(5585,)
 #KBar_dic['amount'].size    ##5585
 #KBar_dic['time'].size    ##5585
