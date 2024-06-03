@@ -131,17 +131,45 @@ options = ['日', '週', '月']
 selected_option = st.selectbox('請選擇一個選項:', options)
 # 根據選擇的選項自動設置 K 棒的時間長度
 if selected_option == '日':
-    default_duration = 1440  # 1 日 = 1440 分鐘
+    days = st.number_input('輸入天數:', min_value=1, value=1, step=1)
+    cycle_duration = days * 1440  # 將天數轉換為分鐘
 elif selected_option == '週':
-    default_duration = 10080  # 1 週 = 7 * 1440 分鐘
+    weeks = st.number_input('輸入週數:', min_value=1, value=1, step=1)
+    cycle_duration = weeks * 7 * 1440  # 將週數轉換為分鐘
 elif selected_option == '月':
-    default_duration = 43200  # 1 月 = 30 * 1440 分鐘
-cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)',  value=default_duration, key="KBar_duration")
+    years = st.number_input('輸入數:', min_value=1, value=1, step=1)
+    cycle_duration = years * 30 * 1440  # 將年數轉換為分鐘
+#cycle_duration = st.number_input('輸入一根 K 棒的時間長度(單位:分鐘, 一日=1440分鐘)',  value=default_duration, key="KBar_duration")
 cycle_duration = int(cycle_duration)
 #cycle_duration = 1440   ## 可以改成你想要的 KBar 週期
 #KBar = indicator_f_Lo2.KBar(Date,'time',2)
 KBar = indicator_forKBar_short.KBar(Date,cycle_duration)    ## 設定cycle_duration可以改成你想要的 KBar 週期
 
+
+# 根據選擇的選項動態調整輸入框
+if selected_option == '日':
+    days = st.number_input('輸入天數:', min_value=1, value=1, step=1)
+    cycle_duration = days * 1440  # 將天數轉換為分鐘
+elif selected_option == '週':
+    weeks = st.number_input('輸入週數:', min_value=1, value=1, step=1)
+    cycle_duration = weeks * 7 * 1440  # 將週數轉換為分鐘
+elif selected_option == '年':
+    years = st.number_input('輸入年數:', min_value=1, value=1, step=1)
+    cycle_duration = years * 365 * 1440  # 將年數轉換為分鐘
+
+# 顯示選擇的時間範圍和計算出的 K 棒時間長度
+st.write('你選擇的時間範圍是:', selected_option)
+st.write('K 棒的時間長度為:', cycle_duration, '分鐘')
+
+# 假設你有一個日期數據 DataFrame，這裡用一個範例 DataFrame
+# Date = pd.DataFrame({'time': pd.date_range(start='1/1/2023', periods=100, freq='H')})
+
+# 假設 KBar 是 indicator_forKBar_short 模塊中的一個函數
+# 這裡用一個範例函數表示
+# KBar = indicator_forKBar_short.KBar(Date, cycle_duration)
+
+# 在 Streamlit 應用中顯示選擇和輸入的結果
+# st.write('KBar 計算結果:', KBar)
 
 
 # 假設你有一個日期數據 DataFrame，這裡用一個範例 DataFrame
