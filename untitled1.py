@@ -336,6 +336,19 @@ KBar_df['STD'] = KBar_df['close'].rolling(window=BollingerPeriod).std()
 KBar_df['Upper'] = KBar_df['MA'] + (KBar_df['STD'] * BollingerStdDev)
 KBar_df['Lower'] = KBar_df['MA'] - (KBar_df['STD'] * BollingerStdDev)
 
+# 選擇唐奇安通道周期
+st.subheader("設定唐奇安通道的周期（天數）")
+DonchianPeriod = st.slider('選擇唐奇安通道的天數', 1, 100, 20)
+
+# 計算唐奇安通道
+def calculate_donchian_channel(df, period=20):
+    delta = df['high'].diff()
+    high_max = df['high'].rolling(window=period).max()
+    low_min = df['low'].rolling(window=period).min()
+    middle_band = (high_max + low_min) / 2
+    return high_max, middle_band, low_min
+
+KBar_df['Donchian_upper'], KBar_df['Donchian_middle'], KBar_df['Donchian_lower'] = calculate_donchian_channel(KBar_df, DonchianPeriod)
 
 
 ###### (5) 將 Dataframe 欄位名稱轉換  ###### 
@@ -415,3 +428,19 @@ with st.expander("K線圖, 布林通道"):
     fig4.add_trace(go.Scatter(x=KBar_df['Time'], y=KBar_df['Lower'], mode='lines', line=dict(color='red', width=2), name='下軌'), secondary_y=True)
     fig4.layout.yaxis2.showgrid = True
     st.plotly_chart(fig4, use_container_width=True)
+    
+    # 繪製K線圖與唐奇安通道
+import plotly.graph_objects as go
+from plotly.subplots import make_subplots
+
+with st.expander("唐奇安通道圖"):
+    fig5 = make_subplots(specs=[[{"secondary_y": True}]])
+    fig5.add_trace(go.Candlestick(x=KBar_df['Time'],
+                    open=KBar_df['Open'], high=KBar_df['High'],
+                    low=KBar_df['Low'], close=KBar_df['Close'], name='K線'),
+                   secondary_y=True)
+    fig5.add_trace(go.Bar(x=KBar_df['Time'], y=KBar_df['Volume'], name='成交量', marker=dict(color='black')), secondary_y=False)
+    fig5.add_trace(go.Scatter(x=KBar_df['Time'][DonchianPeriod-1:], y=KBar_df['Donchian_upper'][DonchianPeriod-1:], name='唐奇安上軌', mode='lines', line=dict(color='blue')))
+    fig5.add_trace(go.Scatter(x=KBar_df['Time'][DonchianPeriod-1:], y=KBar_df['Donchian_middle'][DonchianPeriod-1:], name='唐奇安中軌', mode='lines', line=dict(color='green')))
+    fig5.add_trace(go.Scatter(x=KBar_df['Time'][DonchianPeriod-1:], y=KBar_df['Donchian_lower'][DonchianPeriod-1:], name='唐奇安下軌', mode='lines', line=dict(color='red')))
+    st.plotly_chart(fig5, use_container_width=True)
